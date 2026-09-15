@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     Ray jumpRay;
     Vector2 moveInput = Vector2.zero;
 
+    Camera playerCam;
     PlayerInput input;
     Rigidbody rb;
     
@@ -19,6 +20,18 @@ public class PlayerController : MonoBehaviour
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         jumpRay = new Ray();
+        playerCam = Camera.main;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void FixedUpdate()
+    {
+        Quaternion playerRotation = Quaternion.identity;
+        playerRotation.y = playerCam.transform.rotation.y;
+        playerRotation.w = playerCam.transform.rotation.w;
+        transform.rotation = playerRotation;
     }
 
     // Update is called once per frame
@@ -32,7 +45,10 @@ public class PlayerController : MonoBehaviour
         tempMove.x = moveInput.x * speed;
         tempMove.z = moveInput.y * speed;
 
-        rb.linearVelocity = tempMove;
+        rb.linearVelocity = (tempMove.x * transform.right) + 
+                            (tempMove.y * transform.up) +
+                            (tempMove.z * transform.forward);
+
     }
 
     public void Move(InputAction.CallbackContext context)
