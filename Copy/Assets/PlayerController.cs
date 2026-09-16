@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
         tempMove.z = moveInput.y * speed;
 
         rb.linearVelocity = (tempMove.x * transform.right) + 
-                            (tempMove.y * transform.up) +
+                            (tempMove.y * transform.up) + 
                             (tempMove.z * transform.forward);
 
     }
