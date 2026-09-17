@@ -1,18 +1,28 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f;
     public float jumpHeight = 4.0f;
     public float jumpDetectDistance = 1f;
+    public float interactDistance = 5f;
+
+    public bool attacking = false;
 
     Ray jumpRay;
+    Ray interactRay;
+    RaycastHit interactHit;
     Vector2 moveInput = Vector2.zero;
 
+    public Weapon currentWeapon;
+
     Camera playerCam;
+    public Transform weaponSlot;
     PlayerInput input;
     Rigidbody rb;
+    GameObject pickupObj;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,8 +32,12 @@ public class PlayerController : MonoBehaviour
         jumpRay = new Ray();
         playerCam = Camera.main;
 
+        interactRay = new Ray();
+        weaponSlot = playerCam.transform.GetChild(0);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
     }
 
     private void FixedUpdate()
@@ -40,7 +54,31 @@ public class PlayerController : MonoBehaviour
         jumpRay.origin = transform.position;
         jumpRay.direction = -transform.up;
 
-        Vector3 tempMove = rb.linearVelocity;
+        interactRay.origin = playerCam.transform.position;
+        interactRay.direction = playerCam.transform.forward;
+
+        if(Physics.Raycast(interactRay, out interactHit, interactDistance))
+        {
+            if (interactHit.collider.tag == "Weapon")
+            {
+                pickupObj = interactHit.collider.gameObject;
+            }
+            else
+            {
+                pickupObj = null;
+            }
+        }
+        else
+        {
+            pickupObj = null;
+        }
+
+        if (currentWeapon.holdToAttack && attacking)
+        {
+            currentWeapon.fire();
+        }
+
+            Vector3 tempMove = rb.linearVelocity;
         
         tempMove.x = moveInput.x * speed;
         tempMove.z = moveInput.y * speed;
@@ -62,4 +100,50 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(jumpRay, jumpDetectDistance))
         rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
     }
-}
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.ReadValueAsButton())
+        {
+            if(pickupObj)
+            {
+                if(pickupObj.tag == "Weapon")
+                {
+                    pickupObj.GetComponent<Weapon>().equip(this);
+                }
+
+                pickupObj = null;
+            }
+        }
+    }
+    public void Reload()
+    {
+        if (currentWeapon)
+            if (!currentWeapon.reloading)
+                currentWeapon.reload();
+    }
+
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (currentWeapon)
+        {
+            if (currentWeapon.holdToAttack)
+            {
+                if (context.ReadValueAsButton())
+                    attacking = true;
+                else
+                
+                    attacking = false;
+                }
+
+
+
+
+                else if (context.ReadValueAsButton())
+                    currentWeapon.fire();
+                
+
+            }
+        }
+    }
+

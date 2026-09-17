@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class WeaponScript : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     PlayerController player;
 
@@ -35,46 +35,89 @@ public class WeaponScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        firePoint = transform.GetChild(0);
+        FiringDirection = Camera.main;
     }
 
-    public void equip()
+    public void equip(PlayerController p)
     {
+        player = p;
 
+        player.currentWeapon = this;
+        
+        transform.SetPositionAndRotation(player.weaponSlot.position, player.weaponSlot.rotation);
+        transform.SetParent(player.weaponSlot);
+
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().isTrigger = true;
     }
 
     public void unequip()
     {
+        player.currentWeapon = null;
 
+        transform.SetParent(null);
+
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Collider>().isTrigger = false;
+
+        player = null;
     }
 
     public void reload()
     {
+        if (mag >= magSize)
+            return;
 
+        int reloadCount = magSize - mag;
+
+        if (ammo < reloadCount)
+        {
+            mag += ammo;
+            ammo = 0;
+        }
+        else
+        {
+            mag += reloadCount;
+            ammo -= reloadCount;
+        }
+
+        reloading = true;
+        canFire = false;
+        StartCoroutine("reloadingCooldown");
     }
 
     public void fire()
     {
+        if (mag > 0 && canFire && !reloading)
+        {
+            magSize--;
 
+            GameObject p = Instantiate(projectile, firePoint.position, firePoint.rotation);
+            p.GetComponent<Rigidbody>().AddForce(FiringDirection.transform.forward * projVelocity);
+            Destroy(p, projLifespan);
+            canFire = false;
+            StartCoroutine("cooldownFire");
+
+        }
     }
-
-    IEnumerator burstDuration()
-    {
-
-    }
-
+    
     IEnumerator cooldownFire()
     {
+        yield return new WaitForSeconds(rof);
 
+        if(mag > 0)
+        {
+            canFire = true;
+        }
     }
 
     IEnumerator reloadingCooldown()
     {
+        yield return new WaitForSeconds(reloadCooldown);
 
+        reloading = false;
+        canFire = true;
     }
-
-    IEnumerator ADSTime()
-    {
-
-    }
+    
 }
