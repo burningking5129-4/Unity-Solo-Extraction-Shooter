@@ -24,6 +24,7 @@ public class Weapon : MonoBehaviour
     public float reloadCooldown;
     public float rof;
     public int fireModes;
+    public int currentFireMode;
     public int mag;
     public int magSize;
 
@@ -91,7 +92,7 @@ public class Weapon : MonoBehaviour
     {
         if (mag > 0 && canFire && !reloading)
         {
-            magSize--;
+            mag--;
 
             GameObject p = Instantiate(projectile, firePoint.position, firePoint.rotation);
             p.GetComponent<Rigidbody>().AddForce(FiringDirection.transform.forward * projVelocity);

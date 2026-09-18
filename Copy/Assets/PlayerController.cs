@@ -57,36 +57,36 @@ public class PlayerController : MonoBehaviour
         interactRay.origin = playerCam.transform.position;
         interactRay.direction = playerCam.transform.forward;
 
-        if(Physics.Raycast(interactRay, out interactHit, interactDistance))
+        if (Physics.Raycast(interactRay, out interactHit, interactDistance))
         {
-            if (interactHit.collider.tag == "Weapon")
+            if (Physics.Raycast(interactRay, out interactHit, interactDistance))
             {
-                pickupObj = interactHit.collider.gameObject;
+                if (interactHit.collider.tag == "Weapon")
+                {
+                    pickupObj = interactHit.collider.gameObject;
+                }
+                else
+                    pickupObj = null;
             }
             else
-            {
                 pickupObj = null;
-            }
-        }
-        else
-        {
-            pickupObj = null;
-        }
 
-        if (currentWeapon.holdToAttack && attacking)
-        {
-            currentWeapon.fire();
-        }
+            if (currentWeapon)
+                if(currentWeapon.holdToAttack && attacking)
+            {
+                currentWeapon.fire();
+            }
 
             Vector3 tempMove = rb.linearVelocity;
-        
-        tempMove.x = moveInput.x * speed;
-        tempMove.z = moveInput.y * speed;
 
-        rb.linearVelocity = (tempMove.x * transform.right) + 
-                            (tempMove.y * transform.up) + 
-                            (tempMove.z * transform.forward);
+            tempMove.x = moveInput.x * speed;
+            tempMove.z = moveInput.y * speed;
 
+            rb.linearVelocity = (tempMove.x * transform.right) +
+                                (tempMove.y * transform.up) +
+                                (tempMove.z * transform.forward);
+
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
