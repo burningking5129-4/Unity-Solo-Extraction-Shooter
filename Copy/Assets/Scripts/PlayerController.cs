@@ -1,15 +1,23 @@
+using System.Collections;
+using System.Diagnostics.Contracts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
+    public int hp = 100;
+    public int maxHp = 100;
+
+
     public float speed = 5.0f;
     public float jumpHeight = 4.0f;
     public float jumpDetectDistance = 1f;
     public float interactDistance = 5f;
+    public float trapDmgInterval = 1f;
 
     public bool attacking = false;
+    public bool trapDmg = false;
 
     Ray jumpRay;
     Ray interactRay;
@@ -136,14 +144,54 @@ public class PlayerController : MonoBehaviour
                     attacking = false;
                 }
 
-
-
-
                 else if (context.ReadValueAsButton())
                     currentWeapon.fire();
-                
+            }
+        }
+    public void DropWeapon()
+    {
+        if(currentWeapon)
+        {
+            currentWeapon.GetComponent<Weapon>().unequip();
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Trap")
+        {
+            hp -= 30;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Trap")
+        {
+            if (!trapDmg)
+            {
+                StartCoroutine("trapBleed");
+            }
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "Trap")
+        {
+            if (!trapDmg)
+            {
+                StopCoroutine("trapBleed");
 
             }
         }
     }
+    IEnumerator trapBleed()
+    {
+        trapDmg = true;
+
+        yield return new WaitForSeconds(trapDmgInterval);
+
+        hp -= 30;
+        trapDmg = false;
+    }
+}
 
