@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     public Weapon currentWeapon;
 
-    Camera playerCam;
+    public Camera playerCam;
     public Transform weaponSlot;
     PlayerInput input;
     Rigidbody rb;
@@ -65,8 +65,6 @@ public class PlayerController : MonoBehaviour
         interactRay.origin = playerCam.transform.position;
         interactRay.direction = playerCam.transform.forward;
 
-        if (Physics.Raycast(interactRay, out interactHit, interactDistance))
-        {
             if (Physics.Raycast(interactRay, out interactHit, interactDistance))
             {
                 if (interactHit.collider.tag == "Weapon")
@@ -93,8 +91,6 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = (tempMove.x * transform.right) +
                                 (tempMove.y * transform.up) +
                                 (tempMove.z * transform.forward);
-
-        }
     }
 
     public void Move(InputAction.CallbackContext context)
