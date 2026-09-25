@@ -4,6 +4,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     PlayerController player;
+    Enemy enemy;
 
     [Header("Object References")]
     public GameObject projectile;
@@ -98,7 +99,6 @@ public class Weapon : MonoBehaviour
             Destroy(p, projLifespan);
             canFire = false;
             StartCoroutine("cooldownFire");
-
         }
     }
     
@@ -119,5 +119,4 @@ public class Weapon : MonoBehaviour
         reloading = false;
         canFire = true;
     }
-    
 }

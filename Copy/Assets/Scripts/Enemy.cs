@@ -10,8 +10,7 @@ public class Enemy : MonoBehaviour
     public bool isFollowing = false;
     public bool isAttacking = false;
 
-    public float distanceToStopX = 2;
-    public float distanceToStopY = 2;
+    public float kbDistance = 2;
     public float targetDistance;
     public float dmgTime = 2;
 
@@ -22,6 +21,8 @@ public class Enemy : MonoBehaviour
 
     public NavMeshAgent agent;
     public PlayerController player;
+    public Weapon Weapon;
+    public Proj Proj;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,6 +42,10 @@ public class Enemy : MonoBehaviour
         {
             agent.destination = player.transform.position;
         }
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
     
         private void OnCollisionEnter(Collision collision)
@@ -52,18 +57,22 @@ public class Enemy : MonoBehaviour
 
             isAttacking = true;
         }
+        if (collision.gameObject.tag == "Projectile")
+        {
+            health -= 50;
+        }
 
     }
-
+    
     private void OnCollisionStay(Collision collision)
     {
-        if (!isAttacking && collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player")
         {
-            player.hp -= 10;
             StartCoroutine("dmgCooldown");
+            isAttacking = true;
         }
     }
-
+    
     private void OnCollisionExit(Collision collision)
     {
         if(collision.gameObject.tag == "Player")
@@ -76,10 +85,13 @@ public class Enemy : MonoBehaviour
 
     IEnumerator dmgCooldown()
     {
-        
-        yield return new WaitForSeconds(dmgTime);
+        yield return new WaitForSeconds(1);
+        if (isAttacking == true)
+        {
+            player.hp -= 10;
+        }
         isAttacking = false;
-        //player.GetComponent<Rigidbody>().AddForce(player.playerCam)
+        StopCoroutine("dmgCooldown");
     }
 }
 
