@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -11,26 +13,95 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI AmmoText;
 
+    public bool paused = false;
+
+    public GameObject pauseMenu;
+
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-        healthbar = GameObject.Find("healthbar").GetComponent<Image>();
+        Time.timeScale = 1;
+        
+        if(SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
-        AmmoText = GameObject.Find("AmmoText").GetComponent<TextMeshProUGUI>();
+            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+            healthbar = GameObject.Find("healthbar").GetComponent<Image>();
+
+            AmmoText = GameObject.Find("AmmoText").GetComponent<TextMeshProUGUI>();
+
+            pauseMenu = GameObject.FindGameObjectWithTag("Pause");
+            pauseMenu.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthbar.fillAmount = (float)Player.hp / (float)Player.maxHp;
-
-        if (Player.currentWeapon)
+        if (SceneManager.GetActiveScene().buildIndex != 0)
         {
-            AmmoText.text = "Ammo: " + Player.currentWeapon.mag + "/" + Player.currentWeapon.ammo;
+            healthbar.fillAmount = (float)Player.hp / (float)Player.maxHp;
+
+            if (Player.currentWeapon)
+            {
+                AmmoText.text = "Ammo: " + Player.currentWeapon.mag + "/" + Player.currentWeapon.ammo;
+            }
         }
     }
+
+    public void Pause()
+    {
+        paused = !paused;
+
+        if (paused)
+        {
+            Time.timeScale = 0;
+
+            pauseMenu.SetActive(true);
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Time.timeScale = 1;
+
+            pauseMenu.SetActive (false);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    public void LoadLevel(int LevelID)
+    {
+        if(LevelID >= SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.Log("Level ID is too high" + LevelID);
+        }
+        else
+            SceneManager.LoadScene(LevelID);
+    }
+
+    public void LoadNextLevel()
+    {
+        LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    public void MainMenu()
+    {
+        LoadLevel(0);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+    
 }

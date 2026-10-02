@@ -43,8 +43,7 @@ public class PlayerController : MonoBehaviour
         interactRay = new Ray();
         weaponSlot = playerCam.transform.GetChild(0);
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+       
 
     }
 
@@ -155,7 +154,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Trap")
         {
-            hp -= 30;
+            hp -= 15;
         }
     }
 
@@ -186,7 +185,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(trapDmgInterval);
 
-        hp -= 30;
+        hp -= 15;
         trapDmg = false;
     }
 }

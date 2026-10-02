@@ -8,6 +8,7 @@ TagManager:
   - Projectile
   - Trap
   - Enemy
+  - Pause
   layers:
   - Default
   - TransparentFX
