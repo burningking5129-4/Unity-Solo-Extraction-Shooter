@@ -9,6 +9,8 @@ TagManager:
   - Trap
   - Enemy
   - Pause
+  - Exit
+  - warning
   layers:
   - Default
   - TransparentFX

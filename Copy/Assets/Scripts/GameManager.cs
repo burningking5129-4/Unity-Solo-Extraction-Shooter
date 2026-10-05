@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 
 public class GameManager : MonoBehaviour
 {
+    public Enemy Enemy;
 
     public PlayerController Player;
 
@@ -16,14 +18,15 @@ public class GameManager : MonoBehaviour
     public bool paused = false;
 
     public GameObject pauseMenu;
-
+    
+    public GameObject Warning;
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        Warning.SetActive(false);
         Time.timeScale = 1;
         
         if(SceneManager.GetActiveScene().buildIndex != 0)
@@ -54,8 +57,17 @@ public class GameManager : MonoBehaviour
                 AmmoText.text = "Ammo: " + Player.currentWeapon.mag + "/" + Player.currentWeapon.ammo;
             }
         }
+        
+        if (Enemy.isFollowing == true)
+        {
+            Warning.SetActive(true);
+        }
+        else
+        {
+            Warning.SetActive(false);
+        }
     }
-
+        
     public void Pause()
     {
         paused = !paused;
@@ -105,3 +117,4 @@ public class GameManager : MonoBehaviour
     }
     
 }
+

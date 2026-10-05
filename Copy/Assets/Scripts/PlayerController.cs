@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     PlayerInput input;
     Rigidbody rb;
     GameObject pickupObj;
+    public GameManager gameManager;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -155,6 +156,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Trap")
         {
             hp -= 15;
+        }
+        if (collision.gameObject.tag == "Exit")
+        {
+            gameManager.LoadNextLevel();
         }
     }
 

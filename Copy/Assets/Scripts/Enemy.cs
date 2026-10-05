@@ -42,9 +42,11 @@ public class Enemy : MonoBehaviour
         {
             agent.destination = player.transform.position;
         }
+
         if (health <= 0)
         {
             Destroy(gameObject);
+            isFollowing = false;
         }
     }
     
