@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     RaycastHit interactHit;
     Vector2 moveInput = Vector2.zero;
 
-    public Weapon currentWeapon;
+    public Weapon Weapon;
 
     public Camera playerCam;
     public Transform weaponSlot;
@@ -32,10 +32,14 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     GameObject pickupObj;
     public GameManager gameManager;
+
+    public Transform start;
+    public Transform Player;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         jumpRay = new Ray();
@@ -44,7 +48,6 @@ public class PlayerController : MonoBehaviour
         interactRay = new Ray();
         weaponSlot = playerCam.transform.GetChild(0);
 
-       
 
     }
 
@@ -77,12 +80,19 @@ public class PlayerController : MonoBehaviour
             else
                 pickupObj = null;
 
-            if (currentWeapon)
-                if(currentWeapon.holdToAttack && attacking)
+            if (Weapon)
+                if(Weapon.holdToAttack && attacking)
             {
-                currentWeapon.fire();
+                Weapon.fire();
             }
+            
+            if (hp <= 0)
+        {
+            Player.position = start.position;
+            hp = 100;
 
+        }
+        
             Vector3 tempMove = rb.linearVelocity;
 
             tempMove.x = moveInput.x * speed;
@@ -122,16 +132,16 @@ public class PlayerController : MonoBehaviour
     }
     public void Reload()
     {
-        if (currentWeapon)
-            if (!currentWeapon.reloading)
-                currentWeapon.reload();
+        if (Weapon)
+            if (!Weapon.reloading)
+                Weapon.reload();
     }
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (currentWeapon)
+        if (Weapon)
         {
-            if (currentWeapon.holdToAttack)
+            if (Weapon.holdToAttack)
             {
                 if (context.ReadValueAsButton())
                     attacking = true;
@@ -141,14 +151,14 @@ public class PlayerController : MonoBehaviour
                 }
 
                 else if (context.ReadValueAsButton())
-                    currentWeapon.fire();
+                    Weapon.fire();
             }
         }
     public void DropWeapon()
     {
-        if(currentWeapon)
+        if(Weapon)
         {
-            currentWeapon.GetComponent<Weapon>().unequip();
+            Weapon.GetComponent<Weapon>().unequip();
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -160,6 +170,16 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Exit")
         {
             gameManager.LoadNextLevel();
+        }
+        if(collision.gameObject.tag == "Heals")
+        {
+            hp += 30;
+            Destroy(collision.gameObject);
+        }
+        if(collision.gameObject.tag == "Ammo")
+        {
+            Weapon.ammo += 60;
+            Destroy(collision.gameObject);
         }
     }
 

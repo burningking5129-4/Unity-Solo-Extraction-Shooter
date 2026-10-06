@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     
     public GameObject Warning;
 
+    public PlayerController player;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,9 +54,9 @@ public class GameManager : MonoBehaviour
         {
             healthbar.fillAmount = (float)Player.hp / (float)Player.maxHp;
 
-            if (Player.currentWeapon)
+            if (Player.Weapon)
             {
-                AmmoText.text = "Ammo: " + Player.currentWeapon.mag + "/" + Player.currentWeapon.ammo;
+                AmmoText.text = "Ammo: " + Player.Weapon.mag + "/" + Player.Weapon.ammo;
             }
         }
         

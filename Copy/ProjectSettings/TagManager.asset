@@ -11,6 +11,8 @@ TagManager:
   - Pause
   - Exit
   - warning
+  - Heals
+  - Ammo
   layers:
   - Default
   - TransparentFX

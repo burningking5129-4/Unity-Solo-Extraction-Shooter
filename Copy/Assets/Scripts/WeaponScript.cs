@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
     {
         player = p;
 
-        player.currentWeapon = this;
+        player.Weapon = this;
         
         transform.SetPositionAndRotation(player.weaponSlot.position, player.weaponSlot.rotation);
         transform.SetParent(player.weaponSlot);
@@ -55,7 +55,7 @@ public class Weapon : MonoBehaviour
 
     public void unequip()
     {
-        player.currentWeapon = null;
+        player.Weapon = null;
 
         transform.SetParent(null);
 
