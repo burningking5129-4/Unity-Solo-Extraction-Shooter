@@ -16,19 +16,15 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI AmmoText;
 
     public bool paused = false;
+    public bool giveWarning = false;
 
     public GameObject pauseMenu;
-    
+
     public GameObject Warning;
-
-    public PlayerController player;
-
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Warning.SetActive(false);
         Time.timeScale = 1;
         
         if(SceneManager.GetActiveScene().buildIndex != 0)
@@ -44,6 +40,9 @@ public class GameManager : MonoBehaviour
 
             pauseMenu = GameObject.FindGameObjectWithTag("Pause");
             pauseMenu.SetActive(false);
+
+            Warning = GameObject.FindGameObjectWithTag("warning");
+            Warning.SetActive(false);
         }
     }
 
@@ -59,12 +58,16 @@ public class GameManager : MonoBehaviour
                 AmmoText.text = "Ammo: " + Player.Weapon.mag + "/" + Player.Weapon.ammo;
             }
         }
-        
-        if (Enemy.isFollowing == true)
+
+        if(Player.hp <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        if(giveWarning == true)
         {
             Warning.SetActive(true);
         }
-        else
+        if(giveWarning == false)
         {
             Warning.SetActive(false);
         }

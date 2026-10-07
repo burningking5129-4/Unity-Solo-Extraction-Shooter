@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
 
     public int detectionrange = 5;
 
+    public GameManager gameManager;
     public NavMeshAgent agent;
     public PlayerController player;
     public Weapon Weapon;
@@ -27,6 +28,7 @@ public class Enemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
@@ -40,13 +42,21 @@ public class Enemy : MonoBehaviour
 
         if (isFollowing)
         {
+            gameManager.giveWarning = true;
             agent.destination = player.transform.position;
         }
-
+        if (!isFollowing)
+        {
+            gameManager.giveWarning = false;
+        }
+        if (isFollowing && !isFollowing)
+        {
+            gameManager.giveWarning = true;
+        }
         if (health <= 0)
         {
-            Destroy(gameObject);
             isFollowing = false;
+            Destroy(gameObject);
         }
     }
     

@@ -3,12 +3,12 @@ using System.Diagnostics.Contracts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public int hp = 100;
     public int maxHp = 100;
-
 
     public float speed = 5.0f;
     public float jumpHeight = 4.0f;
@@ -86,12 +86,7 @@ public class PlayerController : MonoBehaviour
                 Weapon.fire();
             }
             
-            if (hp <= 0)
-        {
-            Player.position = start.position;
-            hp = 100;
-
-        }
+            
         
             Vector3 tempMove = rb.linearVelocity;
 
