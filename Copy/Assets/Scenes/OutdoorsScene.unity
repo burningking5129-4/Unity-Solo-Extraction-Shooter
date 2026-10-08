@@ -10435,7 +10435,7 @@ MonoBehaviour:
   projLifespan: 10
   projVelocity: 10000
   reloadCooldown: 2
-  rof: 1
+  rof: 0.5
   fireModes: 0
   currentFireMode: 0
   mag: 0
@@ -14466,10 +14466,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85685a22106090648a0276560f9e81dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  Enemy: {fileID: 4945663851223190886, guid: 7a484ee68ef06c7429d8a5de5687abbe, type: 3}
   Player: {fileID: 585725946}
   healthbar: {fileID: 0}
   AmmoText: {fileID: 0}
+  enemies: []
+  enemiesAlerted: 0
   paused: 0
   giveWarning: 0
   pauseMenu: {fileID: 0}

@@ -40,22 +40,18 @@ public class Enemy : MonoBehaviour
 
         isFollowing = targetDistance <= detectionrange;
 
+        gameManager.EnemyStatUpdate(gameObject, isFollowing);
+
         if (isFollowing)
         {
-            gameManager.giveWarning = true;
             agent.destination = player.transform.position;
         }
-        if (!isFollowing)
-        {
-            gameManager.giveWarning = false;
-        }
-        if (isFollowing && !isFollowing)
-        {
-            gameManager.giveWarning = true;
-        }
+       
         if (health <= 0)
         {
+            
             isFollowing = false;
+            gameManager.EnemyStatUpdate(gameObject, isFollowing);
             Destroy(gameObject);
         }
     }
@@ -71,7 +67,7 @@ public class Enemy : MonoBehaviour
         }
         if (collision.gameObject.tag == "Projectile")
         {
-            health -= 50;
+            health -= Weapon.weaponDamage;
         }
 
     }

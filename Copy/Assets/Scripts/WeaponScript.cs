@@ -27,6 +27,7 @@ public class Weapon : MonoBehaviour
     public int currentFireMode;
     public int mag;
     public int magSize;
+    public int weaponDamage;
 
     [Header("Ammo Stats")]
     public int ammo;

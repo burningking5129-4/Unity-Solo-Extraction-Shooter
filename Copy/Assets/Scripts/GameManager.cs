@@ -2,21 +2,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+using NUnit.Framework;
+using UnityEngine.Animations;
+using System.Collections.Generic;
+using System.Linq;
 
 
 public class GameManager : MonoBehaviour
 {
-    public Enemy Enemy;
 
     public PlayerController Player;
 
     public Image healthbar;
 
     public TextMeshProUGUI AmmoText;
+    public List<GameObject> enemies;
+
+    public int enemiesAlerted = 0;
 
     public bool paused = false;
-    public bool giveWarning = false;
+    public bool giveWarning;
 
     public GameObject pauseMenu;
 
@@ -41,6 +46,10 @@ public class GameManager : MonoBehaviour
             pauseMenu = GameObject.FindGameObjectWithTag("Pause");
             pauseMenu.SetActive(false);
 
+            enemies = new List<GameObject>();
+
+            //enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList<GameObject>();
+
             Warning = GameObject.FindGameObjectWithTag("warning");
             Warning.SetActive(false);
         }
@@ -57,19 +66,29 @@ public class GameManager : MonoBehaviour
             {
                 AmmoText.text = "Ammo: " + Player.Weapon.mag + "/" + Player.Weapon.ammo;
             }
-        }
 
-        if(Player.hp <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        if(giveWarning == true)
-        {
-            Warning.SetActive(true);
-        }
-        if(giveWarning == false)
-        {
-            Warning.SetActive(false);
+            if (Player.hp <= 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+            /*
+            if (enemiesAlerted >= 1)
+            {
+                giveWarning = true;
+            }
+            if (enemiesAlerted <= 0)
+            {
+                giveWarning = false; 
+            }
+            */
+            if (enemies.Count >= 1)
+            {
+                Warning.SetActive(true);
+            }
+            if (enemies.Count == 0)
+            {
+                Warning.SetActive(false);
+            }
         }
     }
         
@@ -119,6 +138,24 @@ public class GameManager : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void EnemyStatUpdate(GameObject e, bool status)
+    {
+        if (enemies.Contains(e) && status) return;
+
+        else if(!enemies.Contains(e) && status)
+        {
+            enemies.Add(e);
+        }
+
+        if(!status)
+        {
+            if (enemies.Contains(e))
+            {
+                enemies.Remove(e);
+            }
+        }
     }
     
 }
