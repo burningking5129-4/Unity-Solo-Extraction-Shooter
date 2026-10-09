@@ -12,9 +12,22 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 5.0f;
     public float jumpHeight = 4.0f;
+    public float sprintBoost = 2.0f;
+    public float stam = 100f;
+    public float stamCost = 10f;
+    public float stamRegen = 5f;
+    public float maxStam = 100f;
     public float jumpDetectDistance = 1f;
     public float interactDistance = 5f;
     public float trapDmgInterval = 1f;
+    public float sprintCooldown = 5f;
+
+    public bool toggleSprint = true;
+    public bool isSprinting = false;
+    public bool canSprint = true;
+    public bool sprintLock = false;
+    public bool regenStam = false;
+    public bool onGround = true;
 
     public bool attacking = false;
     public bool trapDmg = false;
@@ -35,11 +48,11 @@ public class PlayerController : MonoBehaviour
 
     public Transform start;
     public Transform Player;
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         jumpRay = new Ray();
@@ -65,37 +78,83 @@ public class PlayerController : MonoBehaviour
         jumpRay.origin = transform.position;
         jumpRay.direction = -transform.up;
 
+        onGround = Physics.Raycast(jumpRay, jumpDetectDistance);
+
         interactRay.origin = playerCam.transform.position;
         interactRay.direction = playerCam.transform.forward;
 
-            if (Physics.Raycast(interactRay, out interactHit, interactDistance))
+        if (Physics.Raycast(interactRay, out interactHit, interactDistance))
+        {
+            if (interactHit.collider.tag == "Weapon")
             {
-                if (interactHit.collider.tag == "Weapon")
-                {
-                    pickupObj = interactHit.collider.gameObject;
-                }
-                else
-                    pickupObj = null;
+                pickupObj = interactHit.collider.gameObject;
             }
             else
                 pickupObj = null;
+        }
+        else
+            pickupObj = null;
 
-            if (Weapon)
-                if(Weapon.holdToAttack && attacking)
+        if (Weapon)
+            if (Weapon.holdToAttack && attacking)
             {
                 Weapon.fire();
             }
-            
-            
-        
-            Vector3 tempMove = rb.linearVelocity;
 
-            tempMove.x = moveInput.x * speed;
-            tempMove.z = moveInput.y * speed;
 
-            rb.linearVelocity = (tempMove.x * transform.right) +
+
+        Vector3 tempMove = rb.linearVelocity;
+
+        tempMove.x = moveInput.x * speed;
+        tempMove.z = moveInput.y * speed;
+
+        if (isSprinting)
+        {
+            if (stam > 0)
+            {
+                tempMove.z *= sprintBoost;
+                stam -= stamCost * Time.deltaTime;
+
+                StopCoroutine("sprintReset");
+                regenStam = false;
+
+                if (stam <= 0)
+                {
+                    canSprint = false;
+                    isSprinting = false;
+                    stam = 0;
+                }
+            }
+        }
+
+        if (!isSprinting)
+        {
+            if (!canSprint && !sprintLock)
+            {
+                StartCoroutine("sprintReset");
+            }
+
+            if (canSprint && !regenStam)
+            {
+                regenStam = true;
+            }
+
+            if (regenStam)
+            {
+                stam += stamRegen * Time.deltaTime;
+
+                if (stam >= maxStam)
+                {
+                    stam = maxStam;
+                    regenStam = false;
+                }
+            }
+        }
+
+        rb.linearVelocity = (tempMove.x * transform.right) +
                                 (tempMove.y * transform.up) +
                                 (tempMove.z * transform.forward);
+
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -103,20 +162,57 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
 
+    public void Sprint(InputAction.CallbackContext context)
+    {
+        if (canSprint && onGround)
+        {
+            if (!toggleSprint)
+            {
+                if (context.ReadValueAsButton())
+                {
+                    isSprinting = true;
+                }
+                else
+                {
+                    isSprinting = false;
+                    canSprint = false;
+                }
+            }
+        }
+        else
+        {
+            if (context.performed)
+            {
+                /*
+                if (isSprinting == true)
+                {
+                    isSprinting = false;
+                }
+                else
+                {
+                    isSprinting = true;
+                }
+                */
+                isSprinting = !isSprinting;
+            }
+        }
+    }
 
     public void Jump()
     {
-        if (Physics.Raycast(jumpRay, jumpDetectDistance))
-        rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+        if (onGround)
+        {
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+        }
     }
 
     public void Interact(InputAction.CallbackContext context)
     {
         if (context.ReadValueAsButton())
         {
-            if(pickupObj)
+            if (pickupObj)
             {
-                if(pickupObj.tag == "Weapon")
+                if (pickupObj.tag == "Weapon")
                 {
                     pickupObj.GetComponent<Weapon>().equip(this);
                 }
@@ -141,17 +237,17 @@ public class PlayerController : MonoBehaviour
                 if (context.ReadValueAsButton())
                     attacking = true;
                 else
-                
-                    attacking = false;
-                }
 
-                else if (context.ReadValueAsButton())
-                    Weapon.fire();
+                    attacking = false;
             }
+
+            else if (context.ReadValueAsButton())
+                Weapon.fire();
         }
+    }
     public void DropWeapon()
     {
-        if(Weapon)
+        if (Weapon)
         {
             Weapon.GetComponent<Weapon>().unequip();
         }
@@ -166,12 +262,12 @@ public class PlayerController : MonoBehaviour
         {
             gameManager.LoadNextLevel();
         }
-        if(collision.gameObject.tag == "Heals")
+        if (collision.gameObject.tag == "Heals")
         {
             hp += 30;
             Destroy(collision.gameObject);
         }
-        if(collision.gameObject.tag == "Ammo")
+        if (collision.gameObject.tag == "Ammo")
         {
             Weapon.ammo += 60;
             Destroy(collision.gameObject);
@@ -190,7 +286,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionExit(Collision collision)
     {
-        if(collision.gameObject.tag == "Trap")
+        if (collision.gameObject.tag == "Trap")
         {
             if (!trapDmg)
             {
@@ -207,6 +303,19 @@ public class PlayerController : MonoBehaviour
 
         hp -= 15;
         trapDmg = false;
+    }
+
+
+    IEnumerator sprintReset()
+    {
+        sprintLock = true;
+        regenStam = false;
+
+        yield return new WaitForSeconds(sprintCooldown);
+
+        canSprint = true;
+        regenStam = true;
+        sprintLock = false;
     }
 }
 

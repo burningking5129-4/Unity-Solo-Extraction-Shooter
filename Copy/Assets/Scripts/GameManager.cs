@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public PlayerController Player;
 
     public Image healthbar;
+    public Image sprintbar;
 
     public TextMeshProUGUI AmmoText;
     public List<GameObject> enemies;
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
             Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
             healthbar = GameObject.Find("healthbar").GetComponent<Image>();
+            sprintbar = GameObject.Find("sprintbar").GetComponent<Image>();
 
             AmmoText = GameObject.Find("AmmoText").GetComponent<TextMeshProUGUI>();
 
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
             healthbar.fillAmount = (float)Player.hp / (float)Player.maxHp;
+            sprintbar.fillAmount = Player.stam / Player.maxStam;
 
             if (Player.Weapon)
             {
