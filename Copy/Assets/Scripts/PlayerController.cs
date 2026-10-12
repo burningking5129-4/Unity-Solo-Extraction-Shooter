@@ -129,6 +129,7 @@ public class PlayerController : MonoBehaviour
 
         if (!isSprinting)
         {
+            sprintLock = false;
             if (!canSprint && !sprintLock)
             {
                 StartCoroutine("sprintReset");
@@ -181,18 +182,13 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (context.performed)
+            if (context.started)
             {
-                /*
-                if (isSprinting == true)
-                {
-                    isSprinting = false;
-                }
-                else
-                {
-                    isSprinting = true;
-                }
-                */
+                isSprinting = true;
+            }
+            if (context.canceled)
+            {
+                Debug.Log("change sprint");
                 isSprinting = !isSprinting;
             }
         }
