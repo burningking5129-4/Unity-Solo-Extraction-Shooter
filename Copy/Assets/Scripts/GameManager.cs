@@ -131,6 +131,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        //LoadLevel(0);
         LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void MainMenu()

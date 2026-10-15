@@ -197,9 +197,10 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         if (onGround)
-        {
-            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
-        }
+            if (gameManager.paused == false)
+            {
+                rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+            }
     }
 
     public void Interact(InputAction.CallbackContext context)
