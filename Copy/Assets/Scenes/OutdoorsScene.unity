@@ -655,7 +655,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00074666494
+      value: -0.019
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5599,7 +5599,7 @@ MonoBehaviour:
   Weapon: {fileID: 0}
   playerCam: {fileID: 0}
   weaponSlot: {fileID: 0}
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 1529999320}
   start: {fileID: 795199300}
   Player: {fileID: 585725952}
 --- !u!114 &585725947
@@ -5708,7 +5708,19 @@ MonoBehaviour:
     m_ActionId: b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba
     m_ActionName: 'Player/Next[/Keyboard/2]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 585725946}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Sprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
   - m_PersistentCalls:
@@ -9700,11 +9712,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00074666494
+      value: -0.019
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.66360486
+      value: 0.664
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10536,6 +10548,7 @@ MonoBehaviour:
   projectile: {fileID: 6066439868484392999, guid: 3dc89df050c9d1a49b1151574efc8385, type: 3}
   firePoint: {fileID: 720992925}
   FiringDirection: {fileID: 1823688466}
+  clips: []
   canFire: 1
   holdToAttack: 0
   reloading: 0
@@ -18280,7 +18293,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00074666494
+      value: -0.019
       objectReference: {fileID: 0}
     - target: {fileID: 6650298582362166634, guid: 8f2100d5443573e438de359b36ddc92e, type: 3}
       propertyPath: m_LocalPosition.z

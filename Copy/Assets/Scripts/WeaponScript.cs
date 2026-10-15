@@ -5,11 +5,13 @@ public class Weapon : MonoBehaviour
 {
     PlayerController player;
     Enemy enemy;
+    AudioSource speaker;
 
     [Header("Object References")]
     public GameObject projectile;
     public Transform firePoint;
     public Camera FiringDirection;
+    public AudioClip[] clips;
 
     [Header("Meta Attributes")]
     public bool canFire = true;
@@ -39,6 +41,7 @@ public class Weapon : MonoBehaviour
     {
         firePoint = transform.GetChild(0);
         FiringDirection = Camera.main;
+        speaker = GetComponent<AudioSource>();
     }
 
     public void equip(PlayerController p)

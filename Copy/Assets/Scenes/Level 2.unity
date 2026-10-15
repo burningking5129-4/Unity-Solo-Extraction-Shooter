@@ -3884,7 +3884,7 @@ MonoBehaviour:
   Weapon: {fileID: 0}
   playerCam: {fileID: 0}
   weaponSlot: {fileID: 0}
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 1529999320}
   start: {fileID: 795199300}
   Player: {fileID: 585725952}
 --- !u!114 &585725947
