@@ -4475,6 +4475,14 @@ PrefabInstance:
       propertyPath: detectionrange
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 5587593446192865670, guid: 7a484ee68ef06c7429d8a5de5687abbe, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5587593446192865670, guid: 7a484ee68ef06c7429d8a5de5687abbe, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
