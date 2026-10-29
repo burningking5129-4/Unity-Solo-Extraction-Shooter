@@ -70,6 +70,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: df7655313459f774c830fe121bdd33c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,8 +156,10 @@ MonoBehaviour:
   dmgTime: 2
   health: 100
   maxHealth: 100
-  detectionrange: 10
+  weaponDamage: 15
+  detectionrange: 12
+  gameManager: {fileID: 0}
   agent: {fileID: 4471610125495083937}
   player: {fileID: 0}
   Weapon: {fileID: 0}
-  Proj: {fileID: 0}
+  Proj: {fileID: 4103155319370261585, guid: 3dc89df050c9d1a49b1151574efc8385, type: 3}

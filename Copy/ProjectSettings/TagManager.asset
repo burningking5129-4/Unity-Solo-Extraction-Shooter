@@ -13,6 +13,7 @@ TagManager:
   - warning
   - Heals
   - Ammo
+  - reloading
   layers:
   - Default
   - TransparentFX

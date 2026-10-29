@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
 
     public int health = 100;
     public int maxHealth = 100;
+    public int weaponDamage = 15;
 
     public int detectionrange = 5;
 

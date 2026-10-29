@@ -10,7 +10,7 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-
+    public Weapon Weapon;
     public PlayerController Player;
 
     public Image healthbar;
@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject pauseMenu;
 
+    public GameObject reloadText;
     public GameObject Warning;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -54,6 +55,9 @@ public class GameManager : MonoBehaviour
 
             Warning = GameObject.FindGameObjectWithTag("warning");
             Warning.SetActive(false);
+
+            reloadText = GameObject.FindGameObjectWithTag("reloading");
+            reloadText.SetActive(false);
         }
     }
 
@@ -92,6 +96,12 @@ public class GameManager : MonoBehaviour
             {
                 Warning.SetActive(false);
             }
+            if(Weapon.reloading == true)
+            {
+                reloadText.SetActive(true);
+            }
+            else
+                reloadText.SetActive(false);
         }
     }
         
